@@ -12,7 +12,7 @@
 //#define SERVER_IP	"127.0.0.1"
 //#define SERVER_PORT	9988
 #define MSG_STR		"Hello,server"
-char buf[1024 * 32];
+char buf[1024];
 
 void printf_usage(char *progname)
 {
@@ -54,6 +54,8 @@ int main(int argc, char **argv)
 			case 'h':
 				printf_usage(argv[0]);
 				return 0;
+                        default:
+				printf_usage(argv[0]);
 		}
 	}
 
@@ -61,7 +63,7 @@ int main(int argc, char **argv)
 	{
 		while(argc < 3)
 		{
-			printf("please input %s [serverip] [port]\n",argv[0]);
+                        printf_usage(argv[0]);
 			return -1;
 		}
 		connt_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -87,6 +89,7 @@ int main(int argc, char **argv)
 			return -3;
 		}
 		printf("connect to server[%s:%d] successfully!\n", serverip, port);
+                memset(buf, 'a', sizeof(buf));
 		while(1)
 		{
 			//if(write(connt_fd, MSG_STR, strlen(MSG_STR)) < 0)
@@ -111,7 +114,6 @@ int main(int argc, char **argv)
 			//}
 
 			//printf("read %d bytes from server : '%s' \n", rv, buf);
-			//sleep(1);
 		}
 
 cleanup:

@@ -44,12 +44,14 @@ int main(int argc, char **argv)
 			case 'h':
 				printf_usage(argv[0]);
 				return 0;
+                        default:
+				printf_usage(argv[0]);
 		}
 	}
 
 	while(argc < 2)
 	{
-		printf("please input %s [port] \n",argv[0]);
+                printf_usage(argv[0]);
 		return -1;
 	}
 
@@ -87,30 +89,21 @@ int main(int argc, char **argv)
 		{
 			memset(buf, 0, sizeof(buf));
 			rv = read(client_fd, buf, sizeof(buf));
-			if(rv < 0)
-			{
+			if(rv < 0) {
 				printf("read data from client [%d] failure : %s\n", client_fd, strerror(errno));
 				close(client_fd);
 				break;
-			}
-			else if(rv == 0)
-			{
+			} else if(rv == 0) {
 				printf("%d \n",rv);
 				printf("client [%d] disconnected \n", client_fd);
 				close(client_fd);
 				break;	
 			}
-			//printf("read %d bytes data from client[%d] and the data is : %s \n", rv , client_fd, buf);
-
-			//rv1 = write(client_fd, buf, rv);
-			//if(rv1 < 0)
-			//{
-			//	printf("write data back to client[%d] failure: %s \n", client_fd, strerror(errno));
-			//	close(client_fd);
-			//	break;
-			//}
+			printf("read %d bytes data from client[%d] and the data is :\n", rv , client_fd);
+                        for (int i = 0; i < rv; i++)
+                                printf("<0x%x>", buf[i]);
+                        printf("\n");
 		}
-		sleep(1);
 	}
 	close(socket_fd);
 }
